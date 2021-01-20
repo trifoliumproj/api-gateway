@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { Transport, ClientsModule } from '@nestjs/microservices';
 import { NhService } from './nh.service';
 import { NhController } from './nh.controller';
+import { join } from 'path';
 
 @Module({
   imports: [
