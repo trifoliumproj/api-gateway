@@ -1,30 +1,24 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { APIClient } from '../../api/generated/nhentai/nhentai_grpc_pb';
 import {
-  GalleryRequest,
+  NHENTAI_PACKAGE_NAME,
+  A_PI_SERVICE_NAME,
+  APIClient,
   GalleryResponse,
-} from '../../api/generated/nhentai/nhentai_pb';
+  GalleryRequest,
+} from '../generated/api/nhentai';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable, bindNodeCallback } from 'rxjs';
-import { requestCallback } from 'grpc';
-
-interface APIClientProxy extends APIClient {}
 
 @Injectable()
 export class NhService implements OnModuleInit {
-  private apiService: APIClientProxy;
+  private apiService: APIClient;
 
-  constructor(@Inject('@trifoliumproj/nh') private client: ClientGrpc) {}
+  constructor(@Inject(NHENTAI_PACKAGE_NAME) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.apiService = this.client.getService<APIClientProxy>('API');
+    this.apiService = this.client.getService<APIClient>(A_PI_SERVICE_NAME);
   }
 
   gallery(id: number): Observable<GalleryResponse> {
-    let request = new GalleryRequest();
-    request.setId(id);
-    return bindNodeCallback((callback: requestCallback<GalleryResponse>) =>
-      this.apiService.gallery(request, callback),
-    )();
+    this.apiService.gallery({ id });
   }
 }
