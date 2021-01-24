@@ -6,6 +6,7 @@ import {
   GalleryResponse,
   GalleryRequest,
 } from '../generated/api/konachan';
+import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
 export class KonachanService implements OnModuleInit {
